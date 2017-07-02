@@ -1,6 +1,6 @@
 package io.zenandroid.greenfield.playlist;
 
-import org.greenrobot.eventbus.Subscribe;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 

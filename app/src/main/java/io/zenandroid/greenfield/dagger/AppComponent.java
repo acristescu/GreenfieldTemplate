@@ -15,5 +15,4 @@ public interface AppComponent {
 
 	void inject(PlaylistPresenter presenter);
 
-
 }

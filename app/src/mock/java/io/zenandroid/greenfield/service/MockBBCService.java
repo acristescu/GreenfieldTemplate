@@ -2,12 +2,11 @@ package io.zenandroid.greenfield.service;
 
 import android.os.Handler;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import io.zenandroid.greenfield.Application;
 import io.zenandroid.greenfield.model.Playlist;
 import io.zenandroid.greenfield.model.PlaylistResponse;
 import io.zenandroid.greenfield.model.Song;
@@ -41,7 +40,7 @@ public class MockBBCService implements BBCService {
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				EventBus.getDefault().post(mockResponse);
+				Application.getInstance().getBus().post(mockResponse);
 			}
 		}, 500);
 	}

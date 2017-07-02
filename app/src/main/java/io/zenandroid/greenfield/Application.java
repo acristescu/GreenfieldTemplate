@@ -1,12 +1,17 @@
 package io.zenandroid.greenfield;
 
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
+
+import com.squareup.otto.Bus;
 
 import io.zenandroid.greenfield.dagger.Injector;
 
 public class Application extends android.app.Application {
 
 	private static Application instance;
+
+	private static Bus bus = new Bus();
 
 	static {
 		//
@@ -30,4 +35,14 @@ public class Application extends android.app.Application {
 	public static Application getInstance() {
 		return instance;
 	}
+
+	public static Bus getBus() {
+		return bus;
+	}
+
+	@VisibleForTesting
+	public static void setBus(Bus bus) {
+		Application.bus = bus;
+	}
+
 }

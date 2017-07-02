@@ -3,7 +3,7 @@ package io.zenandroid.greenfield.api;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
+import com.squareup.otto.Bus;
 
 import io.zenandroid.greenfield.Application;
 import io.zenandroid.greenfield.R;
@@ -22,6 +22,8 @@ public class ApiCallback<T> implements Callback<T> {
 
 	private Class<? extends T> responseClass;
 
+	private final Bus bus = Application.getBus();
+
 	private static final String TAG = ApiCallback.class.getSimpleName();
 
 	public ApiCallback(Class<? extends T> responseClass) {
@@ -32,9 +34,9 @@ public class ApiCallback<T> implements Callback<T> {
 	public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
 		if(response.isSuccessful()) {
 			if(response.body() != null) {
-				EventBus.getDefault().post(processResult(response.body()));
+				bus.post(processResult(response.body()));
 			} else {
-				EventBus.getDefault().post(generateEmptyBodyResult());
+				bus.post(generateEmptyBodyResult());
 			}
 		} else {
 			final String message = String.format(
@@ -44,14 +46,14 @@ public class ApiCallback<T> implements Callback<T> {
 			);
 
 			Log.e(TAG, message);
-			EventBus.getDefault().post(new ApiError(message, null, responseClass));
+			bus.post(new ApiError(message, null, responseClass));
 		}
 	}
 
 	@Override
 	public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
 		Log.e(TAG, t.getMessage(), t);
-		EventBus.getDefault().post(new ApiError(Application.getInstance().getString(R.string.error_server_connection), t, responseClass));
+		bus.post(new ApiError(Application.getInstance().getString(R.string.error_server_connection), t, responseClass));
 	}
 
 	/**
