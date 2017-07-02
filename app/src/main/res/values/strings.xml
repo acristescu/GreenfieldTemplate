@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GreenfieldTemplate</string>
+    <string name="dialog_okay">OK</string>
+    <string name="api_error_message">Server responded with status: %1$d message: %2$s</string>
+    <string name="api_exception_message">Exception while contacting server: %1$s</string>
+    <string name="error_server_connection">There was a problem connecting to the server</string>
+</resources>
