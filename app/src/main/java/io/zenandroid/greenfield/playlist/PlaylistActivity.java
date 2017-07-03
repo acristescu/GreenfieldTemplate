@@ -1,7 +1,9 @@
 package io.zenandroid.greenfield.playlist;
 
 import android.os.Bundle;
-import android.widget.TextView;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ import io.zenandroid.greenfield.model.Song;
 
 public class PlaylistActivity extends BaseActivity implements PlaylistContract.View {
 
-	@BindView(R.id.text) TextView textView;
+	@BindView(R.id.recycler) RecyclerView recycler;
 
 	private PlaylistContract.Presenter presenter;
 
@@ -25,21 +27,15 @@ public class PlaylistActivity extends BaseActivity implements PlaylistContract.V
 		Injector.get().inject(this);
 		ButterKnife.bind(this);
 
+		recycler.setLayoutManager(new LinearLayoutManager(this));
+		recycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
 		presenter = new PlaylistPresenter(this);
 		presenter.start();
 	}
 
 	@Override
 	public void displaySongs(List<Song> songs) {
-		final StringBuilder sb = new StringBuilder();
-		for(Song song : songs) {
-			sb		.append(song.getArtist())
-					.append(" - ")
-					.append(song.getTitle());
-			if(sb.length() != 0) {
-				sb.append("\n");
-			}
-		}
-		textView.setText(sb.toString());
+		recycler.setAdapter(new SongListAdapter(songs));
 	}
 }
