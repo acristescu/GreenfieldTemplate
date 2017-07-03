@@ -9,6 +9,7 @@ import io.zenandroid.greenfield.Application;
 import io.zenandroid.greenfield.R;
 import io.zenandroid.greenfield.event.ApiError;
 import io.zenandroid.greenfield.event.EmptyBodyResponse;
+import io.zenandroid.greenfield.util.EspressoIdlingResource;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,11 +28,13 @@ public class ApiCallback<T> implements Callback<T> {
 	private static final String TAG = ApiCallback.class.getSimpleName();
 
 	public ApiCallback(Class<? extends T> responseClass) {
+		EspressoIdlingResource.getInstance().increment();
 		this.responseClass = responseClass;
 	}
 
 	@Override
 	public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+		EspressoIdlingResource.getInstance().decrement();
 		if(response.isSuccessful()) {
 			if(response.body() != null) {
 				bus.post(processResult(response.body()));
@@ -52,6 +55,7 @@ public class ApiCallback<T> implements Callback<T> {
 
 	@Override
 	public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+		EspressoIdlingResource.getInstance().decrement();
 		Log.e(TAG, t.getMessage(), t);
 		bus.post(new ApiError(Application.getInstance().getString(R.string.error_server_connection), t, responseClass));
 	}

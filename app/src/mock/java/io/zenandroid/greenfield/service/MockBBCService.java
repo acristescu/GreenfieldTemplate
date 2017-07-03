@@ -1,6 +1,7 @@
 package io.zenandroid.greenfield.service;
 
 import android.os.Handler;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ import io.zenandroid.greenfield.Application;
 import io.zenandroid.greenfield.model.Playlist;
 import io.zenandroid.greenfield.model.PlaylistResponse;
 import io.zenandroid.greenfield.model.Song;
+import io.zenandroid.greenfield.util.EspressoIdlingResource;
 
 /**
  * Created by acristescu on 30/06/2017.
@@ -18,6 +20,7 @@ import io.zenandroid.greenfield.model.Song;
 public class MockBBCService implements BBCService {
 
 	private PlaylistResponse mockResponse = new PlaylistResponse();
+	private int delay = 0;
 
 	@Inject public MockBBCService() {
 		final Playlist playlist = new Playlist();
@@ -37,11 +40,18 @@ public class MockBBCService implements BBCService {
 
 	@Override
 	public void fetchSongs() {
+		EspressoIdlingResource.getInstance().increment();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				Application.getInstance().getBus().post(mockResponse);
+				Application.getBus().post(mockResponse);
+				EspressoIdlingResource.getInstance().decrement();
 			}
-		}, 500);
+		}, delay);
+	}
+
+	@VisibleForTesting
+	public void setDelay(int delay) {
+		this.delay = delay;
 	}
 }
