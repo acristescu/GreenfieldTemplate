@@ -55,4 +55,10 @@ public class BaseActivity extends AppCompatActivity {
 			progressDialog = null;
 		}
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		dismissProgressDialog();
+	}
 }
