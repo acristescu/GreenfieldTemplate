@@ -1,8 +1,5 @@
 package io.zenandroid.greenfield.playlist;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.ThreadEnforcer;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -10,11 +7,10 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
-import io.zenandroid.greenfield.Application;
+import io.reactivex.Single;
 import io.zenandroid.greenfield.dagger.DaggerTestingComponent;
 import io.zenandroid.greenfield.dagger.Injector;
 import io.zenandroid.greenfield.dagger.MockBBCServiceModule;
-import io.zenandroid.greenfield.event.ApiError;
 import io.zenandroid.greenfield.model.Playlist;
 import io.zenandroid.greenfield.model.PlaylistResponse;
 import io.zenandroid.greenfield.model.Song;
@@ -22,6 +18,7 @@ import io.zenandroid.greenfield.service.BBCService;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by acristescu on 02/07/2017.
@@ -41,14 +38,14 @@ public class PlaylistPresenterTest {
 		MockitoAnnotations.initMocks(this);
 		Injector.setComponent(
 				DaggerTestingComponent.builder().
-						mockBBCServiceModule(new MockBBCServiceModule(service)).build());
-		Application.setBus(new Bus(ThreadEnforcer.ANY));
+						mockBBCServiceModule(new MockBBCServiceModule(service)).build()
+		);
 		presenter = new PlaylistPresenter(view);
 
 		response = new PlaylistResponse();
 		final Playlist playlist = new Playlist();
 		response.setPlaylist(playlist);
-		playlist.setSongs(new ArrayList<Song>());
+		playlist.setSongs(new ArrayList<>());
 
 		Song s;
 		for(int i = 0 ; i < 5 ; i++) {
@@ -59,36 +56,39 @@ public class PlaylistPresenterTest {
 			playlist.getSongs().add(s);
 		}
 
+		when(service.fetchSongs()).thenReturn(Single.just(response));
 	}
 
 	@Test
 	public void testSongsAreLoaded() {
-		presenter.start();
+		presenter.subscribe();
 
 		verify(view).showProgressDialog();
 		verify(service).fetchSongs();
 
-		Application.getBus().post(response);
 		verify(view).displaySongs(response.getPlaylist().getSongs());
 		verify(view).dismissProgressDialog();
 
 		verifyNoMoreInteractions(view);
 		verifyNoMoreInteractions(service);
+		presenter.unsubscribe();
 	}
 
 	@Test
 	public void testApiErrorIsHandled() {
-		presenter.start();
+		final Exception exception = new Exception("An exception");
+		when(service.fetchSongs()).thenReturn(Single.error(exception));
+
+		presenter.subscribe();
 
 		verify(view).showProgressDialog();
 		verify(service).fetchSongs();
 
-		final ApiError error = new ApiError("Test message", new Exception(), PlaylistResponse.class);
-		Application.getBus().post(error);
 		verify(view).dismissProgressDialog();
-		verify(view).showErrorMessage(error.getMessage());
+		verify(view).showErrorMessage(exception.getMessage());
 
 		verifyNoMoreInteractions(view);
 		verifyNoMoreInteractions(service);
+		presenter.unsubscribe();
 	}
 }

@@ -1,13 +1,15 @@
 package io.zenandroid.greenfield.service;
 
-import android.os.Handler;
 import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import io.zenandroid.greenfield.Application;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.zenandroid.greenfield.model.Playlist;
 import io.zenandroid.greenfield.model.PlaylistResponse;
 import io.zenandroid.greenfield.model.Song;
@@ -39,15 +41,13 @@ public class MockBBCService implements BBCService {
 	}
 
 	@Override
-	public void fetchSongs() {
+	public Single<PlaylistResponse> fetchSongs() {
 		EspressoIdlingResource.getInstance().increment();
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				Application.getBus().post(mockResponse);
-				EspressoIdlingResource.getInstance().decrement();
-			}
-		}, delay);
+		return Single.just(mockResponse)
+				.delay(delay, TimeUnit.MILLISECONDS)
+				.subscribeOn(Schedulers.computation())
+				.observeOn(AndroidSchedulers.mainThread())
+				.doFinally(() -> EspressoIdlingResource.getInstance().decrement());
 	}
 
 	@VisibleForTesting

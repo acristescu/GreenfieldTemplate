@@ -31,7 +31,18 @@ public class PlaylistActivity extends BaseActivity implements PlaylistContract.V
 		recycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
 		presenter = new PlaylistPresenter(this);
-		presenter.start();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		presenter.subscribe();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		presenter.unsubscribe();
 	}
 
 	@Override

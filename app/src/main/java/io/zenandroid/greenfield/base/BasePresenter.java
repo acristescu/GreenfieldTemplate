@@ -1,9 +1,7 @@
 package io.zenandroid.greenfield.base;
 
-import com.squareup.otto.Subscribe;
-
-import io.zenandroid.greenfield.Application;
-import io.zenandroid.greenfield.event.ApiError;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by acristescu on 02/07/2017.
@@ -12,27 +10,23 @@ import io.zenandroid.greenfield.event.ApiError;
 public abstract class BasePresenter implements Presenter {
 
 	private View view;
+	private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 	public BasePresenter(View view) {
 		this.view = view;
-		//
-		// This hack is needed because otto does not walk up the object hierarchy when posting a
-		// message (due to performance reasons) hence you cannot subscribe to a message in a base
-		// class. To work around this bug/feature we specifically register on the error message here
-		// This is the recommended way of doing it. See https://github.com/square/otto/issues/26
-		//
-		Application.getBus().register(new Object() {
-			@Subscribe
-			public void onApiError(ApiError error) {
-				BasePresenter.this.onApiError(error);
-			}
-		});
-		Application.getBus().register(this);
 	}
 
-	@Subscribe
-	protected void onApiError(ApiError error) {
+	protected void onError(Throwable throwable) {
 		view.dismissProgressDialog();
-		view.showErrorMessage(error.getMessage());
+		view.showErrorMessage(throwable.getMessage());
+	}
+
+	protected void addDisposable(Disposable disposable) {
+		compositeDisposable.add(disposable);
+	}
+
+	@Override
+	public void unsubscribe() {
+		compositeDisposable.clear();
 	}
 }

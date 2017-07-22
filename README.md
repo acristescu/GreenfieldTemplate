@@ -1,4 +1,4 @@
-# Greenfield Template
+# Greenfield Template (RxJava 2 version)
 
 [![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=595a5011982d060001a36b8a&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/595a5011982d060001a36b8a/build/latest?branch=master)
 
@@ -6,14 +6,18 @@ This is a template that I use for new projects. It already has some basic
 stuff setup, such as:
 
 * Retrofit + OKHttp
-* Otto
+* RxJava
 * Dagger
 * MVP stuff
 * Butterknife
 * Local JUnit tests
 * UI tests
 
-For more info, you can check out the [blog post](http://zenandroid.io/testable-and-robust-architecture-for-android-projects/) I wrote about it.
+This is a (more recent and less battle-tested) variation of the architecture decribed in
+ my [blog post](http://zenandroid.io/testable-and-robust-architecture-for-android-projects/).
+ The main difference here is the use of RxJava 2 instead of the event bus to bring back results
+ from the service into the presenter. This does simplify a lot of the piping, particularly in
+ the error handling part.
 
 ## Overview
 
@@ -25,8 +29,8 @@ The flow of events and data:
 
 1. The __Activity__ reacts to the user input by informing the __Presenter__ that data is required.
 1. The __Presenter__ fires off the appropriate request in the service layer (and instructs the __Activity__ to display a busy indicator).
-1. The __Service__ then issues the correct REST call to the __Retrofit__ layer (providing a callback).
-1. The __Retrofit__ layer exchanges HTTP requests and responses with the Server and then calls either the `onSuccess` or `onFailure` method (as the case may be) on the provided __Callback__.
-1. The __Callback__ posts the data or error on the __Event Bus__.
-1. The __Presenter__ (being subscribed the relevant data and errors on the __Event Bus__) receives the data or error and issues the correct commands to the __Activity__ to update the UI (and dismiss the busy indicator).
+1. The __Service__ then issues the correct REST call to the __Retrofit__ layer.
+1. The __Retrofit__ layer exchanges HTTP requests and responses with the Server and returns an `Observable` (or perhaps `Single`).
+1. The __Service__ possibly inspects the `Observable`, schedules it on the correct thread (in order to keep the __Presenter__ free of Android Schedulers and thus pure JUnit testable) and returns it back to the __Presenter__.
+1. The __Presenter__ receives the `Observable`, retrieves the data or error and issues the correct commands to the __Activity__ to update the UI (and dismiss the busy indicator).
 1. The __Activity__ presents the user with the data or error message.

@@ -1,7 +1,5 @@
 package io.zenandroid.greenfield.playlist;
 
-import com.squareup.otto.Subscribe;
-
 import javax.inject.Inject;
 
 import io.zenandroid.greenfield.base.BasePresenter;
@@ -27,13 +25,15 @@ public class PlaylistPresenter extends BasePresenter implements PlaylistContract
 	}
 
 	@Override
-	public void start() {
+	public void subscribe() {
 		view.showProgressDialog();
-		bbcService.fetchSongs();
+		addDisposable(
+			bbcService.fetchSongs()
+				.subscribe(this::onPlaylistReceived, this::onError)
+		);
 	}
 
-	@Subscribe
-	public void onPlaylistReceived(PlaylistResponse response) {
+	private void onPlaylistReceived(PlaylistResponse response) {
 		view.dismissProgressDialog();
 		view.displaySongs(response.getPlaylist().getSongs());
 	}
