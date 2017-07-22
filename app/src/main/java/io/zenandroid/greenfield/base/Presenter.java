@@ -6,6 +6,7 @@ package io.zenandroid.greenfield.base;
 
 public interface Presenter {
 
-	void start();
+	void subscribe();
+	void unsubscribe();
 
 }

@@ -1,7 +1,7 @@
 package io.zenandroid.greenfield.api;
 
+import io.reactivex.Single;
 import io.zenandroid.greenfield.model.PlaylistResponse;
-import retrofit2.Call;
 import retrofit2.http.GET;
 
 /**
@@ -10,6 +10,6 @@ import retrofit2.http.GET;
 
 public interface BBCRadioApi {
 
-	@GET("playlist.json")
-	Call<PlaylistResponse> getPlaylistResponse();
+	@GET("plasylist.json")
+	Single<PlaylistResponse> getPlaylistResponse();
 }
