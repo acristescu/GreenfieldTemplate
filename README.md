@@ -18,12 +18,16 @@ This is a (more recent and less battle-tested) variation of the architecture dec
  The main difference here is the use of RxJava 2 instead of the event bus to bring back results
  from the service into the presenter. This does simplify a lot of the piping, particularly in
  the error handling part.
+ 
+ > __Note:__ this does make extensive use of Lambda Expressions and thus requires Android Studio 3.0, which at the time of this writing is
+ still in "Preview" state (available on the Canary channel). This is bound to change in the following weeks and the release is already
+ quite stable in my experience. If that is an issue for you, please consider having a look at Retrolabda.
 
 ## Overview
 
 Here is the diagram of the architecture proposed here:
 
-![](https://cdn.rawgit.com/acristescu/GreenfieldTemplate/master/architecture.svg)
+![](https://cdn.rawgit.com/acristescu/GreenfieldTemplate/86c6e7a/architecture.svg)
 
 The flow of events and data:
 
