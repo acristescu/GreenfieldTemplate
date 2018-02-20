@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import io.zenandroid.greenfield.dagger.Injector;
-
 /**
  * Created by acristescu on 24/06/2017.
  */
@@ -24,7 +22,6 @@ public class BaseActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Injector.get().inject(this);
 		customLoadingView = new ProgressBar(this);
 	}
 	public void showErrorMessage(String message) {

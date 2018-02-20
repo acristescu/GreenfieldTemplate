@@ -1,13 +1,17 @@
 package io.zenandroid.greenfield.dagger;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
 import dagger.Provides;
 import io.zenandroid.greenfield.BuildConfig;
-import io.zenandroid.greenfield.api.BBCRadioApi;
-import io.zenandroid.greenfield.service.BBCService;
-import io.zenandroid.greenfield.service.BBCServiceImpl;
+import io.zenandroid.greenfield.api.FlickrApi;
+import io.zenandroid.greenfield.service.FlickrService;
+import io.zenandroid.greenfield.service.FlickrServiceImpl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -15,15 +19,15 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by acristescu on 30/06/2017.
+ * created by acristescu
  */
 @Module
-public class BBCServiceModule {
+public class FlickrServiceModule {
 
 	private static final int TIMEOUT = 15;
 
 	@Provides
-	BBCRadioApi provideBBCRadioApi() {
+	FlickrApi provideFlickrApi() {
 		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -46,19 +50,23 @@ public class BBCServiceModule {
 				.readTimeout(TIMEOUT, TimeUnit.SECONDS)
 				.addInterceptor(logging);
 
+		final Gson gson = new GsonBuilder()
+				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+				.create();
+
 		return new Retrofit
 				.Builder()
 				.baseUrl(BuildConfig.BASE_URL)
 				.client(okClientBuilder.build())
-				.addConverterFactory(GsonConverterFactory.create())
+				.addConverterFactory(GsonConverterFactory.create(gson))
 				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 				.build()
-				.create(BBCRadioApi.class);
+				.create(FlickrApi.class);
 	}
 
 	@Provides
-	BBCService provideBBCService(BBCServiceImpl bbcService) {
-		return bbcService;
+	FlickrService provideFlickrService(FlickrServiceImpl service) {
+		return service;
 	}
 
 }

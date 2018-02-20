@@ -1,29 +1,31 @@
 package io.zenandroid.greenfield.service;
 
+import android.support.annotation.Nullable;
+
 import javax.inject.Inject;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.zenandroid.greenfield.api.BBCRadioApi;
-import io.zenandroid.greenfield.model.PlaylistResponse;
+import io.zenandroid.greenfield.api.FlickrApi;
+import io.zenandroid.greenfield.model.ImageListResponse;
 import io.zenandroid.greenfield.util.EspressoIdlingResource;
 
-public class BBCServiceImpl implements BBCService{
+public class FlickrServiceImpl implements FlickrService {
 
-	private final static String TAG = BBCServiceImpl.class.getSimpleName();
+	private final static String TAG = FlickrServiceImpl.class.getSimpleName();
 
-	private final BBCRadioApi bbcRadioApi;
+	private final FlickrApi flickrApi;
 
 	@Inject
-	public BBCServiceImpl(BBCRadioApi api) {
-		bbcRadioApi = api;
+	public FlickrServiceImpl(FlickrApi api) {
+		flickrApi = api;
 	}
 
 	@Override
-	public Single<PlaylistResponse> fetchSongs() {
+	public Single<ImageListResponse> getImageList(@Nullable String tags) {
 		EspressoIdlingResource.getInstance().increment();
-		return bbcRadioApi.getPlaylistResponse()
+		return flickrApi.getPhotos(tags)
 				.subscribeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
 				.doFinally(() -> EspressoIdlingResource.getInstance().decrement());

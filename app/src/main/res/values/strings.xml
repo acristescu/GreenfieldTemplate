@@ -4,4 +4,10 @@
     <string name="api_error_message">Server responded with status: %1$d message: %2$s</string>
     <string name="api_exception_message">Exception while contacting server: %1$s</string>
     <string name="error_server_connection">There was a problem connecting to the server</string>
+    <string name="no_title">(No Title)</string>
+    <string name="no_author">(no author)</string>
+    <string name="no_tags">(no tags)</string>
+    <string name="public_images">Public images</string>
+    <string name="send_mail">Send mail</string>
+    <string name="email_subject">Here is an image I found on Flickr</string>
 </resources>
