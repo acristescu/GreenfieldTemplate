@@ -6,16 +6,10 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
 import android.widget.Toast
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import io.zenandroid.greenfield.R
@@ -23,6 +17,7 @@ import io.zenandroid.greenfield.base.BaseActivity
 import io.zenandroid.greenfield.dagger.Injector
 import io.zenandroid.greenfield.model.Image
 import io.zenandroid.greenfield.service.FlickrService
+import kotlinx.android.synthetic.main.activity_feed.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
@@ -37,19 +32,12 @@ class FeedActivity : BaseActivity(), FeedContract.View {
     private lateinit var presenter: FeedContract.Presenter
     private val adapter = FeedImageAdapter()
 
-    @BindView(R.id.recycler) lateinit var recycler: RecyclerView
-    @BindView(R.id.toolbar) lateinit var toolbar: Toolbar
-    @BindView(R.id.search_view) lateinit var searchView: SearchView
-    @BindView(R.id.swipe_to_refresh) lateinit var swipeRefreshLayout: SwipeRefreshLayout
-
     @Inject lateinit var flickrService: FlickrService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Injector.get().inject(this)
         setContentView(R.layout.activity_feed)
-
-        ButterKnife.bind(this)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.public_images)
@@ -74,6 +62,8 @@ class FeedActivity : BaseActivity(), FeedContract.View {
                 return false
             }
         })
+
+        sort.setOnClickListener { onSortClicked() }
     }
 
     override fun onResume() {
@@ -141,8 +131,7 @@ class FeedActivity : BaseActivity(), FeedContract.View {
         showErrorMessage("Cannot save image because permission request was rejected")
     }
 
-    @OnClick(R.id.sort)
-    fun onSortClicked() {
+    private fun onSortClicked() {
         val d = AlertDialog.Builder(this)
                 .setTitle("Select sorting")
                 .setItems(arrayOf("Date Published", "Date Taken")) { _, position ->

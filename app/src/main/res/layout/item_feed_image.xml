@@ -53,7 +53,7 @@
             android:textColor="#111111"
             />
         <TextView
-            android:id="@+id/published_date"
+            android:id="@+id/publishedDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="27 Jan 2018 10:43"
@@ -62,7 +62,7 @@
             android:layout_marginTop="4dp"
             />
         <TextView
-            android:id="@+id/taken_date"
+            android:id="@+id/takenDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="27 Jan 2018 10:43"

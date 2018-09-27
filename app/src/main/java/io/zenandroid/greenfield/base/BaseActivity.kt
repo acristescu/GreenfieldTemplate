@@ -23,13 +23,13 @@ open class BaseActivity : AppCompatActivity() {
         customLoadingView = ProgressBar(this)
     }
 
-    fun showErrorMessage(message: String?) {
+    open fun showErrorMessage(message: String?) {
         dismissProgressDialog()
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     open fun showProgressDialog() {
-        val parent = customLoadingView.parent as ViewGroup
+        val parent = customLoadingView.parent as? ViewGroup
 
         if (progressDialog == null) {
             progressDialog = ProgressDialog(this).apply {
@@ -38,7 +38,7 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
 
-        parent.removeView(customLoadingView)
+        parent?.removeView(customLoadingView)
 
         progressDialog?.apply {
             show()
