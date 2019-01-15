@@ -9,16 +9,14 @@ import android.support.annotation.VisibleForTesting
 
 object Injector {
 
-    private var component: AppComponent? = null
+    private lateinit var component: AppComponent
 
     fun init(context: Context) {
-        if (component == null) {
-            component = DaggerAppComponent.builder().appModule(AppModule()).build()
-        }
+        component = DaggerAppComponent.builder().appModule(AppModule()).build()
     }
 
     fun get(): AppComponent {
-        return component!!
+        return component
     }
 
     @VisibleForTesting

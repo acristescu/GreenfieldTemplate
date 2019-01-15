@@ -25,7 +25,7 @@ class FeedPresenter(private val view: FeedContract.View, private val flickrServi
 
     private fun setImageList(imageListResponse: ImageListResponse) {
         view.dismissProgressDialog()
-        imageListResponse.items?.let (view::showImages)
+        imageListResponse.items?.let(view::showImages)
     }
 
     override fun onSearch(query: CharSequence) {
@@ -82,15 +82,15 @@ class FeedPresenter(private val view: FeedContract.View, private val flickrServi
                 ?: flickrService.getImageList(tags)
 
         addDisposable(source
-                .doOnSuccess { this.storeList(it) }
-                .doOnSuccess { this.sortList(it) }
-                .subscribe ( this::setImageList, this::onError)
+                .doOnSuccess(this::storeList)
+                .doOnSuccess(this::sortList)
+                .subscribe(this::setImageList, this::onError)
         )
     }
 
     private fun sortList(imageListResponse: ImageListResponse) {
         imageListResponse.items = imageListResponse.items?.sortedBy {
-            when(criterion) {
+            when (criterion) {
                 FeedContract.SortCriterion.TAKEN -> it.dateTaken
                 FeedContract.SortCriterion.PUBLISHED -> it.published
             }

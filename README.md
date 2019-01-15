@@ -3,26 +3,32 @@
 [![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=595a5011982d060001a36b8a&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/595a5011982d060001a36b8a/build/latest?branch=master)
 [![Build status](https://build.appcenter.ms/v0.1/apps/c673f10e-0551-4819-b539-07f767f0f4fe/branches/master/badge)](https://appcenter.ms)
 
-This is a template that I use for new projects. It already has some basic
-stuff setup, such as:
+This is a template that I use for new projects. It already has some basic stuff setup, such as:
 
 * Retrofit + OKHttp
-* RxJava
-* Dagger
-* MVP stuff
-* Butterknife
-* Local JUnit tests
-* UI tests
+* RxJava2
+* Dagger2
+* MVP architecture
+* Kotlin extensions
+* JUnit tests (with Mockito)
+* UI tests with Espresso (run on mockDebug variant!)
+* Mock and connected variants (for offline work and tests)
+* Permission dispatcher library
+* CI Integration (Microsoft's AppCenter) that runs the tests on commit
 
-This is a (more recent and less battle-tested) variation of the architecture decribed in
- my [blog post](http://zenandroid.io/testable-and-robust-architecture-for-android-projects/).
- The main difference here is the use of RxJava 2 instead of the event bus to bring back results
- from the service into the presenter. This does simplify a lot of the piping, particularly in
- the error handling part.
- 
- > __Note:__ this does make extensive use of Lambda Expressions and thus requires Android Studio 3.0, which at the time of this writing is
- still in "Preview" state (available on the Canary channel). This is bound to change in the following weeks and the release is already
- quite stable in my experience. If that is an issue for you, please consider having a look at Retrolabda.
+The app itself connects to Flickr and displays a list of images. You can search for
+particular tags or you can sort the images.
+
+TODO:
+* maybe have an MVI version?
+* try out mosby for MVP boilerplate?
+* maybe do some cool stuff with Groupie?
+* Koin instead of Dagger?
+* Move more towards Clean Architecture.
+
+Note: I wrote a [blog post](http://zenandroid.io/testable-and-robust-architecture-for-android-projects/) about
+an old version of this architecture. It is now obsolete, but the article might be interesting
+for historic reasons. Remember EventBus? :)
 
 ## Overview
 

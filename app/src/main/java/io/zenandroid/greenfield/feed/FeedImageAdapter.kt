@@ -21,7 +21,7 @@ import java.util.*
 
 class FeedImageAdapter : RecyclerView.Adapter<FeedImageAdapter.ViewHolder>() {
 
-    private var imageList: List<Image> = ArrayList()
+    private var imageList = listOf<Image>()
     private val format = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.UK)
     private val browseSubject = PublishSubject.create<Image>()
     private val saveSubject = PublishSubject.create<Image>()
