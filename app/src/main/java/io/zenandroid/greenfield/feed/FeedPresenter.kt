@@ -9,6 +9,7 @@ import io.zenandroid.greenfield.base.BasePresenter
 import io.zenandroid.greenfield.model.Image
 import io.zenandroid.greenfield.model.ImageListResponse
 import io.zenandroid.greenfield.service.FlickrService
+import java.lang.Exception
 
 /**
  * Created by alex on 25/01/2018.
@@ -69,7 +70,7 @@ class FeedPresenter(private val view: FeedContract.View, private val flickrServi
                             image.tags ?: "Default Description")
                 }
 
-                override fun onBitmapFailed(errorDrawable: Drawable) {}
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
 
                 override fun onPrepareLoad(placeHolderDrawable: Drawable) {}
             })

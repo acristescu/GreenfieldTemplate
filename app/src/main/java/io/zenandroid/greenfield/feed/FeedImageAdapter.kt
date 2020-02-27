@@ -1,7 +1,7 @@
 package io.zenandroid.greenfield.feed
 
-import android.support.annotation.StringRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +41,7 @@ class FeedImageAdapter : RecyclerView.Adapter<FeedImageAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val image = imageList[position]
         Picasso
-                .with(holder.itemView.image.context)
+                .get()
                 .load(image.media?.m)
                 .placeholder(R.drawable.progress_drawable)
                 .into(holder.itemView.image)
@@ -50,9 +50,9 @@ class FeedImageAdapter : RecyclerView.Adapter<FeedImageAdapter.ViewHolder>() {
         setTextOrEmpty(holder.itemView.author, image.author, R.string.no_author)
         setTextOrEmpty(holder.itemView.tags, image.tags, R.string.no_tags)
 
-        holder.itemView.browse.setOnClickListener { _ -> browseSubject.onNext(image) }
-        holder.itemView.save.setOnClickListener { _ -> saveSubject.onNext(image) }
-        holder.itemView.share.setOnClickListener { _ -> shareSubject.onNext(image) }
+        holder.itemView.browse.setOnClickListener { browseSubject.onNext(image) }
+        holder.itemView.save.setOnClickListener { saveSubject.onNext(image) }
+        holder.itemView.share.setOnClickListener { shareSubject.onNext(image) }
 
         holder.itemView.publishedDate.text = String.format("Published: %s", format.format(image.published))
         holder.itemView.takenDate.text = String.format("Taken: %s", format.format(image.dateTaken))

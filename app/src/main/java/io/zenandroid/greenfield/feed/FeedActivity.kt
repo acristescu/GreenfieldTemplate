@@ -6,9 +6,9 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -94,7 +94,7 @@ class FeedActivity : BaseActivity(), FeedContract.View {
     }
 
     override fun loadImageFromURL(url: String, target: Target) {
-        Picasso.with(this)
+        Picasso.get()
                 .load(url)
                 .into(target)
     }

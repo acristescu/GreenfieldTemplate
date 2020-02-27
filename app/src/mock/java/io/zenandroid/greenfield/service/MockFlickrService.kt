@@ -1,6 +1,6 @@
 package io.zenandroid.greenfield.service
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import io.reactivex.Single
@@ -26,7 +26,7 @@ class MockFlickrService @Inject constructor() : FlickrService {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
         mockResponse = gson.fromJson(
-                InputStreamReader(javaClass.classLoader.getResourceAsStream("mock_data.json")),
+                InputStreamReader(javaClass.classLoader!!.getResourceAsStream("mock_data.json")),
                 ImageListResponse::class.java
         )
     }

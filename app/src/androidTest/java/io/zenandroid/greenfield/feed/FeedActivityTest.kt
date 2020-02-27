@@ -3,22 +3,22 @@ package io.zenandroid.greenfield.feed
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
-import android.support.test.espresso.Espresso
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.contrib.RecyclerViewActions
-import android.support.test.espresso.core.internal.deps.guava.base.Strings.isNullOrEmpty
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.Intents.intended
-import android.support.test.espresso.intent.Intents.intending
-import android.support.test.espresso.intent.matcher.IntentMatchers.*
-import android.support.test.espresso.matcher.BoundedMatcher
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import android.support.v7.widget.RecyclerView
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.rule.ActivityTestRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.test.espresso.IdlingRegistry
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import io.zenandroid.greenfield.R
@@ -52,19 +52,19 @@ class FeedActivityTest {
 
     @Before
     fun registerIdlingResource() {
-        Espresso.registerIdlingResources(EspressoIdlingResource)
+        IdlingRegistry.getInstance().register(EspressoIdlingResource)
         val gson = GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
         mockResponse = gson.fromJson(
-                InputStreamReader(javaClass.classLoader.getResourceAsStream("mock_data.json")),
+                InputStreamReader(javaClass.classLoader!!.getResourceAsStream("mock_data.json")),
                 ImageListResponse::class.java
         )
     }
 
     @After
     fun unregisterIdlingResource() {
-        Espresso.unregisterIdlingResources(EspressoIdlingResource)
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource)
     }
 
     @Test
@@ -124,7 +124,7 @@ class FeedActivityTest {
                     atPosition(i, hasDescendant(allOf(withId(R.id.title), withText(title))))
             ))
             onView(withId(R.id.recycler)).check(matches(
-                    atPosition(i, hasDescendant(allOf(withId(R.id.tags), withText(if (isNullOrEmpty(tags)) "(no tags)" else tags))))
+                    atPosition(i, hasDescendant(allOf(withId(R.id.tags), withText(if (tags.isNullOrEmpty()) "(no tags)" else tags))))
             ))
         }
     }

@@ -51,7 +51,7 @@ class FeedPresenterTest {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
         fakeResponse = gson.fromJson(
-                InputStreamReader(javaClass.classLoader.getResourceAsStream("mock_data.json")),
+                InputStreamReader(javaClass.classLoader!!.getResourceAsStream("mock_data.json")),
                 ImageListResponse::class.java
         ).also {
             `when`(service.getImageList(any())).thenReturn(Single.just(it))

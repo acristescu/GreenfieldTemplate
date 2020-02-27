@@ -5,7 +5,7 @@ package io.zenandroid.greenfield.dagger
  */
 
 import android.content.Context
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 
 object Injector {
 
