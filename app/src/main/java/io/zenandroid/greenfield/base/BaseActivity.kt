@@ -8,12 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.LayoutRes
 
 /**
  * Created by acristescu on 24/06/2017.
  */
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : AppCompatActivity {
+
+    constructor() : super()
+    constructor(@LayoutRes contentLayoutId : Int)  : super(contentLayoutId)
 
     private var progressDialog: ProgressDialog? = null
     private lateinit var customLoadingView: View

@@ -30,19 +30,21 @@ android {
 
     // If you need to add more flavors, consider using flavor dimensions.
     productFlavors {
-        mock {
+        offline {
             // At some point you might want to uncomment the next line
             // applicationIdSuffix = ".mock"
             dimension "backend"
+            resValue "string", "app_name", "TFL Road Status (offline flavor!!!)"
         }
-        prod {
+        connected {
             dimension "backend"
+            resValue "string", "app_name", "TFL Road Status"
         }
     }
 
-    // Remove mockRelease as it's not needed.
+    // Remove offlineRelease as it's not needed.
     android.variantFilter { variant ->
-        if(variant.buildType.name == 'release' && variant.getFlavors().get(0).name == 'mock') {
+        if (variant.buildType.name == 'release' && variant.getFlavors().get(0).name == 'offline') {
             variant.setIgnore(true)
         }
     }
@@ -68,6 +70,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'com.google.android.material:material:1.1.0'
 
     implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
 
