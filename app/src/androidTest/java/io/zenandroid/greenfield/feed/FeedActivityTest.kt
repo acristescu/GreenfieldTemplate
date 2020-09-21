@@ -57,7 +57,7 @@ class FeedActivityTest {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
         mockResponse = gson.fromJson(
-                InputStreamReader(javaClass.classLoader!!.getResourceAsStream("mock_data.json")),
+                InputStreamReader(javaClass.classLoader!!.getResourceAsStream("assets/mock_data.json")),
                 ImageListResponse::class.java
         )
     }
